@@ -83,16 +83,16 @@ Always verify official information through `https://cee.kerala.gov.in/`.
 
 ## Copyright and Attribution
 
-UI, implementation, and repository content are maintained in this project repository.
+This project is open source and may be used, modified, forked, and redistributed under the terms of the MIT License.
 
 Attribution requested in the project plan:
 
 - `kubo` - `https://github.com/Kubodev`
 
-If you plan to publish, fork, or redistribute this project publicly, keep the attribution intact unless the repository owner chooses a different policy.
+If you publish a modified version, keep the original attribution and license notice in place.
 
 ## License
 
-No explicit open-source license is currently included in this repository.
+This repository is licensed under the MIT License.
 
-That means default copyright applies. If you want this project to be reusable by others, add a license file such as `MIT`, `Apache-2.0`, or another license that matches your intent.
+See [LICENSE](./LICENSE) for the full text.
