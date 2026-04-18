@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ProgressStepper from "./components/common/ProgressStepper";
@@ -12,8 +12,51 @@ import {
   getDefaultInputs
 } from "./utils/calculations";
 
+const STEP_PARAM_MAP = {
+  "1": 1,
+  calculator: 1,
+  "2": 2,
+  rank: 2,
+  "rank-predictor": 2,
+  "3": 3,
+  college: 3,
+  "college-predictor": 3
+};
+
+const getInitialStep = () => {
+  if (typeof window === "undefined") {
+    return 1;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const rawStep = (params.get("step") || "").toLowerCase();
+  return STEP_PARAM_MAP[rawStep] ?? 1;
+};
+
+const getStepSlug = (step) => {
+  if (step === 2) {
+    return "rank-predictor";
+  }
+
+  if (step === 3) {
+    return "college-predictor";
+  }
+
+  return "calculator";
+};
+
+const syncStepUrl = (step) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("step", getStepSlug(step));
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+};
+
 const App = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(getInitialStep);
   const [transitionDirection, setTransitionDirection] = useState(1);
   const [inputs, setInputs] = useState(getDefaultInputs);
   const [category, setCategory] = useState("General (SM)");
@@ -29,6 +72,25 @@ const App = () => {
     setTransitionDirection(step > currentStep ? 1 : -1);
     setCurrentStep(step);
   };
+
+  useEffect(() => {
+    syncStepUrl(currentStep);
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const handlePopState = () => {
+      const nextStep = getInitialStep();
+      setTransitionDirection(nextStep > currentStep ? 1 : -1);
+      setCurrentStep(nextStep);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [currentStep]);
 
   const resetAll = () => {
     setInputs(getDefaultInputs());

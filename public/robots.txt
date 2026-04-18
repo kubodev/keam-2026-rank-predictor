@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://keam-2026-rank-predictor.vercel.app/sitemap.xml
