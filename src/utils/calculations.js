@@ -1,5 +1,5 @@
-import { collegeCutoffs } from "../data/collegeCutoffs";
-import { rankBands } from "../data/rankTable";
+import { collegeCutoffs } from "../data/collegeCutoffs.js";
+import { rankBands } from "../data/rankTable.js";
 
 const BOARD_SUBJECT_DEFAULT = "Chemistry";
 
@@ -212,6 +212,12 @@ export const getCategoryNote = (category) => {
 
 export const getCollegePredictions = (rank) => {
   const candidateRank = toNumber(rank);
+  const likelihoodPriority = {
+    "High Chance": 0,
+    Moderate: 1,
+    "Low Chance": 2
+  };
+
   const rankedCards = collegeCutoffs
     .map((item) => {
       const highBand = item.closingRank * 0.75;
@@ -236,11 +242,17 @@ export const getCollegePredictions = (rank) => {
       return {
         ...item,
         likelihood,
-        badgeTone
+        badgeTone,
+        rankGap: item.closingRank - candidateRank
       };
     })
     .filter(Boolean)
-    .sort((a, b) => a.closingRank - b.closingRank);
+    .sort(
+      (a, b) =>
+        likelihoodPriority[a.likelihood] - likelihoodPriority[b.likelihood] ||
+        a.closingRank - b.closingRank ||
+        a.college.localeCompare(b.college)
+    );
 
   return rankedCards;
 };
