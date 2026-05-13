@@ -17,11 +17,11 @@ const Footer = () => {
   return (
     <>
       <footer className="rounded-2xl border border-amber-100 bg-white px-4 py-5 text-sm text-subtext shadow-panel sm:px-6">
-        <p>
+        <p data-nosnippet>
           This tool provides estimates based on KEAM 2025 trends. Official ranks are determined by CEE Kerala.
           Results here are indicative only.
         </p>
-        <p className="mt-3">
+        <p className="mt-3" data-nosnippet>
           Warning: This tool is an unofficial estimator. Rank predictions are based on KEAM 2025 trends and published
           cutoff data. Actual ranks depend on the final CEE Kerala normalization process, total candidates, and
           difficulty factors which vary each year. Always refer to{" "}
