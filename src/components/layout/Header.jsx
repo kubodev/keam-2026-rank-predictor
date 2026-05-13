@@ -5,8 +5,17 @@ const Header = () => {
         <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-amber/20 blur-3xl" />
         <div className="relative z-10 flex flex-col gap-6">
           <div className="max-w-xl">
-            <p className="font-body text-xs uppercase tracking-[0.3em] text-amber-200">KEAM 2026 estimator</p>
-            <h1 className="mt-2 font-heading text-4xl leading-tight sm:text-5xl">KEAM Compass</h1>
+            <div className="flex items-center gap-4">
+              <img
+                src="/logo.png"
+                alt="KEAM Compass logo"
+                className="h-16 w-16 rounded-2xl bg-white/95 object-contain p-2 shadow-lg shadow-slate-950/20 sm:h-20 sm:w-20"
+              />
+              <div>
+                <p className="font-body text-xs uppercase tracking-[0.3em] text-amber-200">KEAM 2026 estimator</p>
+                <h1 className="mt-2 font-heading text-4xl leading-tight sm:text-5xl">KEAM Compass</h1>
+              </div>
+            </div>
             <p className="mt-4 font-body text-sm text-slate-200 sm:text-base">
               Normalized Marks Calculator and Rank Predictor with Kerala-focused engineering college insights.
             </p>
