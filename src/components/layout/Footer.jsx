@@ -41,6 +41,7 @@ const Footer = () => {
           </button>
           .
         </p>
+        <p className="mt-1 text-xs">This website is owned by Acadialoom.</p>
       </footer>
 
       {showProfileModal ? (
