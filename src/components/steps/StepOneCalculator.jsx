@@ -5,6 +5,7 @@ import StyledSelect from "../common/StyledSelect";
 
 const boards = ["Kerala State HSE", "CBSE", "ICSE", "ISC", "Other"];
 const optionalSubjects = ["Chemistry", "Computer Science", "Biology", "Biotechnology"];
+const boardTooltip = "CEE Kerala normalizes each subject using board-wise topper marks.";
 
 const NumberField = ({ label, name, value, onChange, error, helper }) => {
   return (
@@ -104,12 +105,21 @@ const StepOneCalculator = ({ inputs, setInputs, evaluation, onProceed, onRecalcu
             <div className="flex rounded-full bg-slate-100 p-1">
               <button
                 type="button"
+                onClick={() => handleKeamMode("entranceScore")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                  inputs.keamMode === "entranceScore" ? "bg-navy text-white" : "text-subtext"
+                }`}
+              >
+                Out of 300
+              </button>
+              <button
+                type="button"
                 onClick={() => handleKeamMode("score")}
                 className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
                   inputs.keamMode === "score" ? "bg-navy text-white" : "text-subtext"
                 }`}
               >
-                Simple input
+                Out of 600
               </button>
               <button
                 type="button"
@@ -123,6 +133,16 @@ const StepOneCalculator = ({ inputs, setInputs, evaluation, onProceed, onRecalcu
             </div>
           </div>
 
+          {inputs.keamMode === "entranceScore" ? (
+            <NumberField
+              label="KEAM Entrance Score (out of 300)"
+              name="keamEntranceScore"
+              value={inputs.keamEntranceScore}
+              onChange={handleChange}
+              error={evaluation.errors.keamEntranceScore}
+            />
+          ) : null}
+
           {inputs.keamMode === "score" ? (
             <NumberField
               label="Enter KEAM score (out of 600)"
@@ -131,7 +151,9 @@ const StepOneCalculator = ({ inputs, setInputs, evaluation, onProceed, onRecalcu
               onChange={handleChange}
               error={evaluation.errors.keamScore}
             />
-          ) : (
+          ) : null}
+
+          {inputs.keamMode === "advanced" ? (
             <div className="grid gap-3 sm:grid-cols-2">
               <NumberField
                 label="Paper I correct answers"
@@ -164,7 +186,7 @@ const StepOneCalculator = ({ inputs, setInputs, evaluation, onProceed, onRecalcu
                 error={evaluation.errors.paper2Wrong}
               />
             </div>
-          )}
+          ) : null}
 
           <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
             <p className="text-xs uppercase tracking-[0.2em] text-amber-700">Live raw score</p>
@@ -174,9 +196,23 @@ const StepOneCalculator = ({ inputs, setInputs, evaluation, onProceed, onRecalcu
 
         <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h3 className="font-heading text-2xl text-navy">Section B: Class 12 Board Marks</h3>
-            <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs text-amber-800">
-              Tooltip: CEE Kerala normalizes each subject using board-wise topper marks.
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading text-2xl text-navy">Section B: Class 12 Board Marks</h3>
+              <div className="group relative inline-flex">
+                <button
+                  type="button"
+                  aria-label={boardTooltip}
+                  className="grid h-7 w-7 place-items-center rounded-full border border-amber-200 bg-amber-50 text-sm font-bold text-amber-800 outline-none transition hover:border-amber-300 hover:bg-amber-100 focus:border-amber-400 focus:bg-amber-100 focus:ring-4 focus:ring-amber-100"
+                >
+                  ?
+                </button>
+                <div
+                  role="tooltip"
+                  className="pointer-events-none absolute right-0 top-9 z-20 w-64 rounded-xl border border-amber-200 bg-white px-3 py-2 text-xs leading-relaxed text-navy opacity-0 shadow-lg shadow-slate-900/10 transition group-hover:opacity-100 group-focus-within:opacity-100"
+                >
+                  {boardTooltip}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -290,8 +326,11 @@ const StepOneCalculator = ({ inputs, setInputs, evaluation, onProceed, onRecalcu
           </summary>
           <div className="mt-4 space-y-3 text-sm text-subtext">
             <p className="text-navy">
-              Normalized KEAM = (Raw KEAM / 600) x 300 = ({evaluation.rawKeamScore.toFixed(2)} / 600) x 300 ={" "}
-              {evaluation.normalizedKeamScore.toFixed(2)}
+              {inputs.keamMode === "entranceScore"
+                ? `Normalized KEAM = direct entrance score = ${evaluation.normalizedKeamScore.toFixed(2)}`
+                : `Normalized KEAM = (Raw KEAM / 600) x 300 = (${evaluation.rawKeamScore.toFixed(
+                    2
+                  )} / 600) x 300 = ${evaluation.normalizedKeamScore.toFixed(2)}`}
             </p>
             <p>
               Maths: ({inputs.mathsMarks || 0} / {inputs.mathsTopper || 0}) x 100 x 1.5 = {maths.weighted.toFixed(2)}

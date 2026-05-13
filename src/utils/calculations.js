@@ -31,7 +31,8 @@ const getThirdSubjectLabel = (board, selectedOptionalSubject) => {
 };
 
 export const getDefaultInputs = () => ({
-  keamMode: "score",
+  keamMode: "entranceScore",
+  keamEntranceScore: "",
   keamScore: "",
   paper1Correct: "",
   paper1Wrong: "",
@@ -54,7 +55,14 @@ export const evaluateStepOne = (inputs) => {
   const paper1Wrong = toNumber(inputs.paper1Wrong);
   const paper2Correct = toNumber(inputs.paper2Correct);
   const paper2Wrong = toNumber(inputs.paper2Wrong);
+  const directEntranceScore = toNumber(inputs.keamEntranceScore);
   const directKeamScore = toNumber(inputs.keamScore);
+
+  if (inputs.keamMode === "entranceScore") {
+    if (directEntranceScore < 0 || directEntranceScore > 300) {
+      errors.keamEntranceScore = "Enter a KEAM entrance score between 0 and 300.";
+    }
+  }
 
   if (inputs.keamMode === "score") {
     if (directKeamScore < 0 || directKeamScore > 600) {
@@ -86,8 +94,19 @@ export const evaluateStepOne = (inputs) => {
   const computedRawScore =
     paper1Correct * 4 - paper1Wrong + (paper2Correct * 4 - paper2Wrong);
 
-  const rawKeamScore = clamp(inputs.keamMode === "advanced" ? computedRawScore : directKeamScore, 0, 600);
-  const normalizedKeamScore = (rawKeamScore / 600) * 300;
+  const rawKeamScore = clamp(
+    inputs.keamMode === "advanced"
+      ? computedRawScore
+      : inputs.keamMode === "entranceScore"
+        ? directEntranceScore * 2
+        : directKeamScore,
+    0,
+    600
+  );
+  const normalizedKeamScore =
+    inputs.keamMode === "entranceScore"
+      ? clamp(directEntranceScore, 0, 300)
+      : (rawKeamScore / 600) * 300;
 
   const thirdSubjectLabel = getThirdSubjectLabel(inputs.board, inputs.optionalSubject);
   const subjectPayload = [
