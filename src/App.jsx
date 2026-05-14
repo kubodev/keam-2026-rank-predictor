@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import CreatorProfileModal from "./components/layout/CreatorProfileModal";
 import ProgressStepper from "./components/common/ProgressStepper";
 import StepOneCalculator from "./components/steps/StepOneCalculator";
 import StepTwoRankPredictor from "./components/steps/StepTwoRankPredictor";
@@ -60,6 +61,7 @@ const App = () => {
   const [transitionDirection, setTransitionDirection] = useState(1);
   const [inputs, setInputs] = useState(getDefaultInputs);
   const [category, setCategory] = useState("General (SM)");
+  const [showCreatorProfile, setShowCreatorProfile] = useState(false);
 
   const evaluation = useMemo(() => evaluateStepOne(inputs), [inputs]);
   const rankEstimate = useMemo(() => estimateRankFromIndex(evaluation.totalIndex), [evaluation.totalIndex]);
@@ -103,7 +105,7 @@ const App = () => {
   return (
     <div className="min-h-screen px-4 py-6 font-body sm:px-6 sm:py-8">
       <div className="mx-auto flex w-full max-w-[900px] flex-col gap-5">
-        <Header />
+        <Header onOpenCreatorProfile={() => setShowCreatorProfile(true)} />
         <ProgressStepper currentStep={currentStep} />
 
         <main
@@ -143,8 +145,10 @@ const App = () => {
           ) : null}
         </main>
 
-        <Footer />
+        <Footer onOpenCreatorProfile={() => setShowCreatorProfile(true)} />
       </div>
+
+      {showCreatorProfile ? <CreatorProfileModal onClose={() => setShowCreatorProfile(false)} /> : null}
     </div>
   );
 };
